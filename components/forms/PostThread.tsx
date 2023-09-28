@@ -15,6 +15,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { useOrganization } from "@clerk/nextjs";
 
 import { usePathname, useRouter } from "next/navigation";
 
@@ -29,6 +30,7 @@ interface Props {
 const PostThread: FC<Props> = ({ userId }: Props) => {
   const router = useRouter();
   const pathname = usePathname();
+  const { organization } = useOrganization();
 
   const form = useForm({
     resolver: zodResolver(ThreadValidation),
@@ -42,7 +44,7 @@ const PostThread: FC<Props> = ({ userId }: Props) => {
     await createThread({
       text: values.thread,
       author: userId,
-      communityId: null,
+      communityId: organization ? organization.id : null,
       path: pathname,
     });
 
